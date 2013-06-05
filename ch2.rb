@@ -1,26 +1,19 @@
 require 'prime'
+require 'enumerator'
 
-def fib(n)
-  fib, n1, n2 = 0, 1, 0
-  f = []
-  while fib < n
-    n2 = + n1
-    fib, n1 = n1, n2
-    f << fib
+fib = Enumerator.new do |y|
+  a = b = 1
+  loop do
+    y << a
+    a, b = b, a + b
   end
-  f
 end
 
 result = 0
-fib(1000000).each do |n|
-  if n.prime? and n > 227000
-    result = n+1
-    break
-  end
-end
+result = fib.next until result > 227000 and result.prime?
 
 arr = []
-result.prime_division.each do |pair|
+result.next.prime_division.each do |pair|
   arr << pair[0]
 end
 puts arr.inject(:+)
